@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MyPDAM</string>
-    <string name="costumer_number">Costumer Number</string>
+    <string name="customer_number">Customer Number</string>
+    <string name="customer_name">Customer Name</string>
     <string name="period">Period</string>
     <string name="number_placeholder">Input customer number</string>
     <string name="select_month">Select month</string>
@@ -14,5 +15,6 @@
     <string name="admin_fee">Admin Fee</string>
     <string name="total_bill">Total Bill</string>
     <string name="close">Close</string>
+    <string name="pay">Pay</string>
 
 </resources>

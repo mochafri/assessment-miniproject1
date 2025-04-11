@@ -2,11 +2,14 @@ package com.muhammadafrizal0011.mypdam
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -40,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -87,7 +91,7 @@ fun CustomerNumberInput(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(
-            text = stringResource(id = R.string.costumer_number),
+            text = stringResource(id = R.string.customer_number),
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
@@ -182,8 +186,10 @@ fun BulanDropdown(
 fun TagihanDialog(
     customerNumber: String,
     month: String,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onBayar: () -> Unit
 ) {
+    val customerName = "Ujang"
     val biayaAdmin = 2500
     val pemakaianAir = 25
     val tarifPerM3 = 3000
@@ -193,16 +199,24 @@ fun TagihanDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Tutup")
+            Row (
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(R.string.close)) // sebaiknya pakai string.xml
+                }
+                TextButton(onClick = onBayar) {
+                    Text(text = stringResource(R.string.pay)) // sebaiknya pakai string.xml
+                }
             }
         },
         title = {
-            Text(text = "Rincian Tagihan")
+            Text(text = stringResource(R.string.dialog_title))
         },
         text = {
-            Column (verticalArrangement = Arrangement.spacedBy(8.dp)){
-                Text("${stringResource(R.string.costumer_number)}: $customerNumber")
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("${stringResource(R.string.customer_name)}: $customerName")
+                Text("${stringResource(R.string.customer_number)}: $customerNumber")
                 Text("${stringResource(R.string.month)}: $month")
                 Text("${stringResource(R.string.water_usage)}: $pemakaianAir m³")
                 Text("${stringResource(R.string.price_per_m3)}: Rp $tarifPerM3")
@@ -214,15 +228,18 @@ fun TagihanDialog(
         },
         shape = RoundedCornerShape(12.dp)
     )
+
 }
 
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
-    var costumerNumber by remember { mutableStateOf("") }
+    var customerName by remember { mutableStateOf("") }
+    var customerNumber by remember { mutableStateOf("") }
     var selectedMonth by remember { mutableStateOf("") }
     var costumerNumberError by remember { mutableStateOf(false) }
     var selectedMonthError by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -231,10 +248,10 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         CustomerNumberInput(
-            value = costumerNumber,
+            value = customerNumber,
             isError = costumerNumberError,
             onValueChange = {
-                costumerNumber = it
+                customerNumber = it
                 costumerNumberError = false
             }
         )
@@ -250,7 +267,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
-                costumerNumberError = costumerNumber.isBlank() || costumerNumber == "0"
+                costumerNumberError = customerNumber.isBlank() || customerNumber == "0"
                 selectedMonthError = selectedMonth.isBlank()
 
                 if (!costumerNumberError && !selectedMonthError) {
@@ -275,9 +292,17 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 
         if (showDialog) {
             TagihanDialog(
-                customerNumber = costumerNumber,
+                customerNumber = customerNumber,
                 month = selectedMonth,
-                onDismiss = { showDialog = false }
+                onDismiss = { showDialog = false },
+                onBayar = {
+                    Toast.makeText(
+                        context,
+                        "Pembayaran berhasil untuk $customerName ($customerNumber) bulan $selectedMonth",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    showDialog = false
+                }
             )
         }
     }
