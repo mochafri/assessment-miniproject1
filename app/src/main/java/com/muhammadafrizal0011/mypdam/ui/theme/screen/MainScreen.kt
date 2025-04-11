@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,10 +18,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -60,6 +62,8 @@ import com.muhammadafrizal0011.mypdam.ui.theme.MyPDAMTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavHostController) {
+    var expanded by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,14 +73,33 @@ fun MainScreen(navController: NavHostController) {
                     titleContentColor = Color.White,
                 ),
                 actions = {
-                    IconButton(onClick = {
-                        navController.navigate(Screen.About.route)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Info,
-                            contentDescription = stringResource(R.string.about),
-                            tint = Color.White
-                        )
+                    Box {
+                        IconButton(onClick = { expanded = true }) {
+                            Icon(
+                                imageVector = Icons.Outlined.MoreVert,
+                                contentDescription = "Menu",
+                                tint = Color.White
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.about)) },
+                                onClick = {
+                                    expanded = false
+                                    navController.navigate(Screen.About.route)
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Keluar") },
+                                onClick = {
+                                    expanded = false
+                                }
+                            )
+                        }
                     }
                 }
             )
@@ -85,6 +108,7 @@ fun MainScreen(navController: NavHostController) {
         ScreenContent(Modifier.padding(innerPadding))
     }
 }
+
 
 @Composable
 fun CustomerNumberInput(

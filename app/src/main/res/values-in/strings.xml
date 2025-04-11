@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyPDAM</string>
+    <string name="customer_number">Nomor Costumer</string>
+    <string name="customer_name">Nama Costumer</string>
+    <string name="period">Periode</string>
+    <string name="number_placeholder">Masukkan nomor costumer</string>
+    <string name="select_month">Pilih bulan</string>
+    <string name="check_button">Cek</string>
+    <string name="input_invalid">masukan tidak boleh kosong</string>
+    <string name="dialog_title">Detail Tagihan</string>
+    <string name="month">Bulan</string>
+    <string name="water_usage">Penggunaan Air</string>
+    <string name="price_per_m3">Harga per m³</string>
+    <string name="water_cost">Biaya Air</string>
+    <string name="admin_fee">Biaya Admin</string>
+    <string name="total_bill">Jumlah Tagihan</string>
+    <string name="close">Tutup</string>
+    <string name="pay">Bayar</string>
+    <string name="about">Tentang</string>
+    <string name="back">Kembali</string>
+    <string name="share">Bagikan</string>
+    <string name="share_template">Nama Pelanggan: %1$s Nomor Pelanggan: %2$s Bulan: %3$s Pemakaian Air: %4$s m3 Harga per m3: Rp.%5$s Biaya Air: Rp.%6$s Biaya Admin: Rp.%7$s Total Tagihan: Rp.%8$s</string>
+    <string name="about_heading">Informasi pembayaran air PDAM</string>
+    <string name="copyright">MyPDAM merupakan aplikasi mobile yang memudahkan pelanggan untuk mengakses informasi tagihan air PDAM dengan cepat, mudah, dan aman. Dengan tampilan yang sederhana dan fitur yang lengkap, MyPDAM membantu Anda untuk mengecek tagihan bulanan, melihat riwayat pembayaran, dan melakukan pembayaran langsung dari smartphone. - Biaya pemakaian air = Rp. 3.000 per m³ - Biaya administrasi = Rp. 2.500</string>
+</resources>
