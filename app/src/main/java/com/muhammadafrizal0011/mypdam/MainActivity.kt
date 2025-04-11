@@ -15,16 +15,22 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -58,19 +64,17 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
-    Scaffold (
+    Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.app_name))
-                },
+                title = { Text(text = stringResource(id = R.string.app_name)) },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = Color.Blue,
                     titleContentColor = Color.White,
                 )
             )
         }
-    ){ innerPadding ->
+    ) { innerPadding ->
         ScreenContent(Modifier.padding(innerPadding))
     }
 }
@@ -78,27 +82,36 @@ fun MainScreen() {
 @Composable
 fun CustomerNumberInput(
     value: String,
+    isError: Boolean,
     onValueChange: (String) -> Unit
-)  {
-    Column (
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ){
-        Text(text = stringResource(id = R.string.costumer_number),
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+            text = stringResource(id = R.string.costumer_number),
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp)
+            fontSize = 18.sp
+        )
 
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(text = stringResource(id = R.string.number_placeholder)) },
+            placeholder = { Text(stringResource(id = R.string.number_placeholder)) },
+            isError = isError,
+            supportingText = {
+                if (isError) Text(stringResource(R.string.input_invalid))
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
             ),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-
+            modifier = Modifier.fillMaxWidth(),
+            trailingIcon = {
+                if (isError) {
+                    Icon(imageVector = Icons.Filled.Warning, contentDescription = null)
+                }
+            }
         )
     }
 }
@@ -107,6 +120,7 @@ fun CustomerNumberInput(
 @Composable
 fun BulanDropdown(
     selectedBulan: String,
+    isError: Boolean,
     onBulanSelected: (String) -> Unit
 ) {
     val listBulan = listOf(
@@ -114,30 +128,33 @@ fun BulanDropdown(
         "Mei", "Juni", "Juli", "Agustus",
         "September", "Oktober", "November", "Desember"
     )
-
     var expanded by remember { mutableStateOf(false) }
 
-    Column (
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ){
-        Text(text =  stringResource(id = R.string.period),
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+            text = stringResource(id = R.string.period),
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp)
+            fontSize = 18.sp
+        )
 
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = {expanded = !expanded}
+            onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
                 value = selectedBulan,
                 onValueChange = {},
                 readOnly = true,
-                placeholder = { Text(text = stringResource(id = R.string.select_month)) },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
+                isError = isError,
+                placeholder = { Text(stringResource(id = R.string.select_month)) },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth(),
+                supportingText = {
+                    if (isError) Text(stringResource(R.string.input_invalid))
+                }
             )
 
             ExposedDropdownMenu(
@@ -146,7 +163,6 @@ fun BulanDropdown(
                 modifier = Modifier
                     .heightIn(max = 200.dp)
                     .verticalScroll(rememberScrollState())
-
             ) {
                 listBulan.forEach { bulan ->
                     DropdownMenuItem(
@@ -163,42 +179,111 @@ fun BulanDropdown(
 }
 
 @Composable
+fun TagihanDialog(
+    customerNumber: String,
+    month: String,
+    onDismiss: () -> Unit
+) {
+    val biayaAdmin = 2500
+    val pemakaianAir = 25
+    val tarifPerM3 = 3000
+    val totalAir = pemakaianAir * tarifPerM3
+    val totalBayar = totalAir + biayaAdmin
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Tutup")
+            }
+        },
+        title = {
+            Text(text = "Rincian Tagihan")
+        },
+        text = {
+            Column (verticalArrangement = Arrangement.spacedBy(8.dp)){
+                Text("${stringResource(R.string.costumer_number)}: $customerNumber")
+                Text("${stringResource(R.string.month)}: $month")
+                Text("${stringResource(R.string.water_usage)}: $pemakaianAir m³")
+                Text("${stringResource(R.string.price_per_m3)}: Rp $tarifPerM3")
+                Text("${stringResource(R.string.water_cost)}: Rp $totalAir")
+                Text("${stringResource(R.string.admin_fee)}: Rp $biayaAdmin")
+                HorizontalDivider()
+                Text("${stringResource(R.string.total_bill)}: Rp $totalBayar")
+            }
+        },
+        shape = RoundedCornerShape(12.dp)
+    )
+}
+
+@Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
-
     var costumerNumber by remember { mutableStateOf("") }
-    var selectedBulan by remember { mutableStateOf("") }
+    var selectedMonth by remember { mutableStateOf("") }
+    var costumerNumberError by remember { mutableStateOf(false) }
+    var selectedMonthError by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
-    Column (
-        modifier = modifier.fillMaxSize().padding(16.dp),
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
-
-    ){
+    ) {
         CustomerNumberInput(
             value = costumerNumber,
-            onValueChange = {costumerNumber = it}
+            isError = costumerNumberError,
+            onValueChange = {
+                costumerNumber = it
+                costumerNumberError = false
+            }
         )
 
         BulanDropdown(
-         selectedBulan = selectedBulan,
-            onBulanSelected = {selectedBulan = it}
+            selectedBulan = selectedMonth,
+            isError = selectedMonthError,
+            onBulanSelected = {
+                selectedMonth = it
+                selectedMonthError = false
+            }
         )
 
         Button(
-            onClick = {},
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+            onClick = {
+                costumerNumberError = costumerNumber.isBlank() || costumerNumber == "0"
+                selectedMonthError = selectedMonth.isBlank()
+
+                if (!costumerNumberError && !selectedMonthError) {
+                    showDialog = true
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue
             ),
             shape = RoundedCornerShape(10.dp)
         ) {
-            Text(text = stringResource(id = R.string.check_button),
+            Text(
+                text = stringResource(id = R.string.check_button),
                 color = Color.White,
                 modifier = Modifier.padding(10.dp),
-                fontSize = 20.sp)
+                fontSize = 20.sp
+            )
         }
 
+        if (showDialog) {
+            TagihanDialog(
+                customerNumber = costumerNumber,
+                month = selectedMonth,
+                onDismiss = { showDialog = false }
+            )
+        }
     }
 }
+
+
 
 
 
