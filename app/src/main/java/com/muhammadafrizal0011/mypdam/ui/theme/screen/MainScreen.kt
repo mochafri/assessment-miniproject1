@@ -1,5 +1,7 @@
 package com.muhammadafrizal0011.mypdam.ui.theme.screen
 
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -190,12 +192,14 @@ fun TagihanDialog(
     onDismiss: () -> Unit,
     onBayar: () -> Unit
 ) {
+    val context = LocalContext.current
     val customerName = "Ujang"
     val biayaAdmin = 2500
     val pemakaianAir = 25
     val tarifPerM3 = 3000
     val totalAir = pemakaianAir * tarifPerM3
     val totalBayar = totalAir + biayaAdmin
+
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -204,10 +208,26 @@ fun TagihanDialog(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 TextButton(onClick = onDismiss) {
-                    Text(text = stringResource(R.string.close)) // sebaiknya pakai string.xml
+                    Text(text = stringResource(R.string.close))
                 }
                 TextButton(onClick = onBayar) {
-                    Text(text = stringResource(R.string.pay)) // sebaiknya pakai string.xml
+                    Text(text = stringResource(R.string.pay))
+                }
+                TextButton(onClick = {
+                    val message = context.getString(
+                        R.string.share_template,
+                        customerName,
+                        customerNumber,
+                        month,
+                        pemakaianAir.toString(),
+                        tarifPerM3.toString(),
+                        totalAir.toString(),
+                        biayaAdmin.toString(),
+                        totalBayar.toString()
+                    )
+                    shareData(context = context, message = message)
+                }) {
+                    Text(text = stringResource(R.string.share))
                 }
             }
         },
@@ -311,7 +331,15 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 }
 
 
-
+private fun shareData(context: Context, message: String) {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, message)
+    }
+    if (shareIntent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(shareIntent)
+    }
+}
 
 
 
