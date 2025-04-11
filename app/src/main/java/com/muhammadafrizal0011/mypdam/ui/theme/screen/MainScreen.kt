@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -233,13 +234,14 @@ fun TagihanDialog(
 
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
-    val customerName by remember { mutableStateOf("") }
-    var customerNumber by remember { mutableStateOf("") }
-    var selectedMonth by remember { mutableStateOf("") }
-    var costumerNumberError by remember { mutableStateOf(false) }
-    var selectedMonthError by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) }
+    val customerName by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
+    var customerNumber by rememberSaveable { mutableStateOf("") }
+    var selectedMonth by rememberSaveable { mutableStateOf("") }
+    var costumerNumberError by rememberSaveable { mutableStateOf(false) }
+    var selectedMonthError by rememberSaveable { mutableStateOf(false) }
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
 
     Column(
         modifier = modifier
