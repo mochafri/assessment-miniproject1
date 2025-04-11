@@ -16,5 +16,15 @@
     <string name="total_bill">Total Bill</string>
     <string name="close">Close</string>
     <string name="pay">Pay</string>
+    <string name="about">About</string>
+    <string name="about_heading">PDAM water payment information</string>
+    <string name="copyright">MyPDAM is a mobile application that makes it easy for
+        customers to access their PDAM water bill informationquickly, conveniently,
+        and securely. With a simple interface andcomplete features, MyPDAM helps you
+        check your monthly bills, view payment history, and make payments directly
+        from your smartphone.
+
+        - water usage fee = IDR 3,000 per m³
+        - administration fee = IDR 2,500</string>
 
 </resources>
