@@ -2,7 +2,6 @@ package com.muhammadafrizal0011.mypdam
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -51,6 +50,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.muhammadafrizal0011.mypdam.navigation.SetupNavGraph
 import com.muhammadafrizal0011.mypdam.ui.theme.MyPDAMTheme
 
 class MainActivity : ComponentActivity() {
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyPDAMTheme {
-                MainScreen()
+                SetupNavGraph()
             }
         }
     }
@@ -233,7 +233,7 @@ fun TagihanDialog(
 
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
-    var customerName by remember { mutableStateOf("") }
+    val customerName by remember { mutableStateOf("") }
     var customerNumber by remember { mutableStateOf("") }
     var selectedMonth by remember { mutableStateOf("") }
     var costumerNumberError by remember { mutableStateOf(false) }
