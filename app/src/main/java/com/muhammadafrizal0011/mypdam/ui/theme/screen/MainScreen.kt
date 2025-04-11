@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,6 +25,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -46,12 +48,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.muhammadafrizal0011.mypdam.R
+import com.muhammadafrizal0011.mypdam.navigation.Screen
 import com.muhammadafrizal0011.mypdam.ui.theme.MyPDAMTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,7 +64,18 @@ fun MainScreen() {
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = Color.Blue,
                     titleContentColor = Color.White,
-                )
+                ),
+                actions = {
+                    IconButton(onClick = {
+                        navController.navigate(Screen.About.route)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = stringResource(R.string.about),
+                            tint = Color.White
+                        )
+                    }
+                }
             )
         }
     ) { innerPadding ->
@@ -302,6 +318,6 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 @Composable
 fun MainScreenPreview() {
     MyPDAMTheme {
-        MainScreen()
+        MainScreen(rememberNavController())
     }
 }
